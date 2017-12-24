@@ -41,12 +41,24 @@ public class ScenesPackageEditor : Editor {
 			ScenesPackageHelper.LoadScenesPackage(serializedObject.targetObject as ScenesPackage);
 		}
 		
-		if(GUILayout.Button("Fermer toutes les scènes")) {
-			if(EditorUtility.DisplayDialog("Fermer", "Fermer le package ? Seules les scènes du package seront sauvegardées.", "Oui", "Non")) {
-				saveScenes = true;
-				EditorApplication.delayCall += CloseDelayed;
-			}
+		if(GUILayout.Button("Sauvegarder toutes les scènes")) {
+			ScenesPackageHelper.SaveAllScenes(serializedObject.targetObject as ScenesPackage);
 		}
+			
+		EditorGUILayout.BeginHorizontal();
+			if(GUILayout.Button("Sauvegarder et fermer")) {
+				if(EditorUtility.DisplayDialog("Fermer", "Fermer le package ? Seules les scènes du package seront sauvegardées.", "Oui", "Non")) {
+					saveScenes = true;
+					EditorApplication.delayCall += CloseDelayed;
+				}
+			}
+			
+			if(GUILayout.Button("Fermer")) {
+				if(EditorUtility.DisplayDialog("Fermer", "Fermer le package ? Toutes les modifications non sauvegardées seront perdues.", "Oui", "Non")) {
+					EditorApplication.delayCall += CloseDelayed;
+				}
+			}
+		EditorGUILayout.EndHorizontal();
 		
 		EditorGUILayout.Separator();
 		
@@ -113,7 +125,7 @@ public class ScenesPackageEditor : Editor {
 		}
 		
 		ScenesPackageHelper.CloseAllScenes();
-		// Selection.activeObject = target;
+		Selection.activeObject = target;
 	}
 	
 }
